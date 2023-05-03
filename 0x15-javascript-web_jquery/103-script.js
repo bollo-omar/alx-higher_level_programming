@@ -1,16 +1,14 @@
-$(function () {
+$(function() {
+  const input = $('#language_code');
+  const button = $('#btn_translate');
+  const hello = $('#hello');
+
   function translateHello() {
-    let languageCode = $('#language_code').val();
-    let apiUrl = `https://fourtonfish.com/hellosalut/?lang=${languageCode}`;
-    $.get(apiUrl, function (data) {
-      $('#hello').text(data.hello);
-    }, 'json');
+    $.getJSON(`https://www.fourtonfish.com/hellosalut/hello/${input.val()}`)
+      .done(data => hello.text(data.hello))
+      .fail((jqXHR, textStatus, errorThrown) => hello.text(`Error: ${textStatus} - ${errorThrown}`));
   }
 
-  $('#btn_translate').click(translateHello);
-  $('#language_code').keydown(function (event) {
-    if (event.keyCode === 13) {
-      translateHello();
-    }
-  });
+  button.on('click', translateHello);
+  input.on('keydown', event => event.which === 13 && translateHello());
 });
